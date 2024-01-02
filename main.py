@@ -4,6 +4,8 @@ from llama_index.llms import OpenAI
 from llama_index.agent import ReActAgent
 from llama_index.tools import FunctionTool
 import subprocess
+from llama_index.callbacks import LlamaDebugHandler, CallbackManager
+
 
 llm = OpenAI(
   model="gpt-3.5-turbo",
@@ -45,6 +47,11 @@ if __name__ == "__main__":
     tool3 = FunctionTool.from_defaults(fn=open_aplication, name="open_aplication")
     tool4 = FunctionTool.from_defaults(fn=open_browser, name="open_browser")
 
-    agent = ReActAgent.from_tools(tools=[tool1, tool2, tool3, tool4], llm=llm, verbose=True)
+    tools=[tool1, tool2, tool3, tool4]
+
+    llama_debug = LlamaDebugHandler(print_trace_on_end=True)
+    callback_manager = CallbackManager(handlers=[llama_debug])
+
+    agent = ReActAgent.from_tools(tools=tools, llm=llm, verbose=True, callback_manager=callback_manager)
     res = agent.query("write a haiku about water and then count characters in it, and if count result is more than 70 open aplication, and if is less than 70 open browser")
     print(res)
