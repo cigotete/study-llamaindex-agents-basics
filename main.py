@@ -1,7 +1,7 @@
 
 import os
 from llama_index.llms import OpenAI
-from llama_index.agent import ReActAgent
+from llama_index.agent import ReActAgent, OpenAIAgent
 from llama_index.tools import FunctionTool
 import subprocess
 from llama_index.callbacks import LlamaDebugHandler, CallbackManager
@@ -52,6 +52,6 @@ if __name__ == "__main__":
     llama_debug = LlamaDebugHandler(print_trace_on_end=True)
     callback_manager = CallbackManager(handlers=[llama_debug])
 
-    agent = ReActAgent.from_tools(tools=tools, llm=llm, verbose=True, callback_manager=callback_manager)
+    agent = OpenAIAgent.from_tools(tools=tools, llm=llm, verbose=True, callback_manager=callback_manager)
     res = agent.query("write a haiku about water and then count characters in it, and if count result is more than 70 open aplication, and if is less than 70 open browser")
     print(res)
